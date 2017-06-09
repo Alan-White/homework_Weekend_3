@@ -34,6 +34,11 @@ class Film
     return Customer.get_many(sql)
   end
 
+  def update()
+    sql = "UPDATE films SET (title, price) = ('#{@title}, #{@price}') WHERE id = #{@id};"
+    SqlRunner.run(sql)
+  end
+
   def self.get_many(sql)
     films = SqlRunner.run(sql)
     result = films.map { |film| Film.new( film ) }
