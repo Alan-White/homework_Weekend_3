@@ -41,7 +41,7 @@ class Ticket
     return Customer.new(customer)
   end  
 
-  def film()
+  def films()
     sql = "SELECT * FROM films WHERE id = #{@film_id}"
     film = SqlRunner.run(sql).first
     return Film.new(film)

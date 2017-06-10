@@ -1,4 +1,4 @@
-require_relative("../db/sql_runner")
+require_relative("../db/sql_runner") 
 
 class Film 
 
@@ -32,6 +32,12 @@ class Film
           INNER JOIN tickets ON tickets.customer_id = customers.id 
           WHERE film_id = #{@id};"
     return Customer.get_many(sql)
+  end
+
+  def tickets()
+    sql = "SELECT tickets.* from tickets 
+           WHERE film_id = #{@id}"
+    return Ticket.get_many(sql)
   end
 
   def update()

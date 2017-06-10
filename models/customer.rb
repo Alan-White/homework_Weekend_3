@@ -39,6 +39,12 @@ class Customer
     return Film.get_many(sql)
   end
 
+  def tickets()
+    sql = "SELECT tickets.* from tickets 
+           WHERE customer_id = #{@id}"
+    return Ticket.get_many(sql)
+  end
+
   def self.get_many(sql)
     customers = SqlRunner.run(sql)
     result = customers.map { |customer| Customer.new( customer ) }
