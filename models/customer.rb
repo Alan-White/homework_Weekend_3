@@ -17,22 +17,24 @@ class Customer
     @id = customer['id'].to_i
   end
 
-  def self.all()
-    sql = "SELECT * FROM customers"
-    return self.get_many(sql)
-  end
-
   def self.delete_all()
    sql = "DELETE FROM customers"
    SqlRunner.run(sql)
   end
 
-  def update()
-    sql = "UPDATE customers SET (name, funds) = ('#{@name}, #{@funds}') WHERE id = #{@id};"
-    SqlRunner.run(sql)
+  def self.all()
+    sql = "SELECT * FROM customers"
+    return self.get_many(sql)
+  end
+  
+  def self.get_many(sql)
+    customers = SqlRunner.run(sql)
+    result = customers.map { |customer| Customer.new( customer ) }
+    return result
   end
 
   def films()
+    # "SELECT * FROM films
     sql = "SELECT films.* from films 
            INNER JOIN tickets ON tickets.film_id = films.id 
            WHERE customer_id = #{@id}"
@@ -40,15 +42,21 @@ class Customer
   end
 
   def tickets()
-    sql = "SELECT tickets.* from tickets 
+    # sql = "SELECT tickets.* from tickets
+    sql = "SELECT * FROM tickets
            WHERE customer_id = #{@id}"
     return Ticket.get_many(sql)
   end
 
-  def self.get_many(sql)
-    customers = SqlRunner.run(sql)
-    result = customers.map { |customer| Customer.new( customer ) }
-    return result
+  def delete()
+    sql = "DELETE FROM customers WHERE id = #{@id};"
+    SqlRunner.run(sql)
   end
+
+  def update()
+    sql = "UPDATE customers SET (name, funds) = ('#{@name}', '#{@funds}') WHERE id = #{@id};"
+    SqlRunner.run(sql)
+  end
+
 
 end

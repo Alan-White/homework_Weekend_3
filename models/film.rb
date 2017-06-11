@@ -17,18 +17,25 @@ class Film
     @id = film['id'].to_i
   end
 
-  def self.all()
-    sql = "SELECT * FROM films"
-    return self.get_many(sql)
-  end
-
   def self.delete_all()
    sql = "DELETE FROM films"
    SqlRunner.run(sql)
   end
 
+  def self.all()
+    sql = "SELECT * FROM films"
+    return self.get_many(sql)
+  end
+
+  def self.get_many(sql)
+    films = SqlRunner.run(sql)
+    result = films.map { |film| Film.new( film ) }
+    return result
+  end
+
   def customers()
-    sql = "SELECT customers.* FROM customers 
+    # sql = "SELECT customers.* FROM customers
+    sql = "SELECT * FROM customers 
           INNER JOIN tickets ON tickets.customer_id = customers.id 
           WHERE film_id = #{@id};"
     return Customer.get_many(sql)
@@ -40,15 +47,16 @@ class Film
     return Ticket.get_many(sql)
   end
 
+   def delete()
+    sql = "DELETE FROM films WHERE id = #{@id};"
+    SqlRunner.run(sql)
+  end
+
   def update()
     sql = "UPDATE films SET (title, price) = ('#{@title}, #{@price}') WHERE id = #{@id};"
     SqlRunner.run(sql)
   end
 
-  def self.get_many(sql)
-    films = SqlRunner.run(sql)
-    result = films.map { |film| Film.new( film ) }
-    return result
-  end
+
 
 end
